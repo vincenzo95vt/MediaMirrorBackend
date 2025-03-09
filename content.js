@@ -13,7 +13,6 @@ async function getContent(text) {
                 {role: "user", content: `Explicame esta noticia: ${text}`}
             ],
         })
-    
         return response.choices[0].message.content;
     } catch (error) {
         console.error("Error a la hora de generar el resumen", error)

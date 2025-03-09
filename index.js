@@ -16,11 +16,15 @@ const scrapeNews = async (url) => {
     
 };
 
-const returnNews = async () => {
-    const url = "https://www.elmundo.es/internacional/2025/03/08/67c98c2be9cf4a51218b4578.html";
-    const scrapedContent = await scrapeNews(url);
-    const content = await getContent(scrapedContent);
-    console.log(content)
+const returnNews = async (url) => {
+    try {
+        const scrapedContent = await scrapeNews(url);
+        const content = await getContent(scrapedContent);
+        return content
+    } catch (error) {
+        console.error("Error a la hora de generar la noticia", error)
+    }
+    
 }
 
 module.exports = {scrapeNews, returnNews}
