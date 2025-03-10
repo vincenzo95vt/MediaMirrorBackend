@@ -15,10 +15,10 @@ app.post("/scrape", async (req, res) => {
     };
     
     const summarizedContent = await returnNews(url);
-    if(!summarizedContent) {
-        return res.status(400).json({error: "No se pudo obtener el contenido de la noticia"});
+    console.log(summarizedContent)
+    if(!summarizedContent || summarizedContent.error) {
+        return res.status(400).json({error: summarizedContent});
     }
-    console.log("se ha hecho correctamente")
     return res.status(200).json({
         status: 200,
         content: summarizedContent
