@@ -2,7 +2,7 @@ const ALLOWED_DOMAINS = [
     ...[
         "elpais.com", "elmundo.es", "abc.es", "lavanguardia.com", "elconfidencial.com",
         "eldiario.es", "elperiodico.com", "20minutos.es", "publico.es", "larazon.es", "elespanol.com",
-        "nuevatribuna.es"
+        "nuevatribuna.es", "okdiario.com"
     ],
     ...[
         "expansion.com", "cincodias.elpais.com", "eleconomista.es", "invertia.com"
@@ -20,7 +20,6 @@ const ALLOWED_DOMAINS = [
 const urlCheck = (url) => {
     try {
         const parsedUrl = new URL(url);
-        console.log(ALLOWED_DOMAINS.some(domain => parsedUrl.hostname.includes(domain)))
         return ALLOWED_DOMAINS.some(domain => parsedUrl.hostname.includes(domain))
     } catch (error) {
         return false

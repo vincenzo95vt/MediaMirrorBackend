@@ -44,7 +44,7 @@ const returnNews = async (url) => {
         if(scrapedContent.error){
             return scrapedContent
         }
-        const content = await getContent(scrapedContent);
+        const content = await getContent(scrapedContent.content);
         if(typeof content === "string"){
             const parsedContent = JSON.parse(content)
             return parsedContent
