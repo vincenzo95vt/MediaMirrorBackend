@@ -1,34 +1,60 @@
-const express = require("express")
-const app = express()
-const cors = require("cors");
-const { returnNews } = require(".");
-app.use(express.json());
-app.use(cors());
+const puppeteer = require("puppeteer");
+const { getContent } = require("./content");
+const { urlCheck } = require("./utils");
 
-const PORT = 3000
-
-app.post("/scrape", async (req, res) => {
-    const url = req.body.url;
-    
-    if(!url) {
-        return res.status(400).json({error: "Se requiere una url"})
-    };
-    
-    const summarizedContent = await returnNews(url);
-    console.log(summarizedContent)
-    if(!summarizedContent || summarizedContent.error) {
-        return res.status(400).json({error: summarizedContent});
+const scrapeNews = async (url) => {
+    try {
+        if (!url || typeof url !== "string" || !url.startsWith("https")) {
+            return {
+                error: true,
+                message: "No es una URL válida"
+            };
+        }
+        const check = urlCheck(url)
+        if(check === false){
+            return {
+                error: true,
+                message: "Ups, parece que tu periódico no es de confianza."
+            };
+        }else{
+            const browser = await puppeteer.launch({ headless: true });
+            const page = await browser.newPage();
+            await page.goto(url, { waitUntil: "domcontentloaded" });
+        
+            const content = await page.evaluate(() => document.body.innerText);
+            await browser.close();
+            return {
+                error: false,
+                content
+            }
+        }
+    } catch (error) {
+        return {
+            error: true,
+            message: "Error al procesar la pagina"
+        };
     }
-    return res.status(200).json({
-        status: 200,
-        content: summarizedContent
-    })
-})
+    
+};
 
-app.get("/", (req, res) => {
-    res.send("🚀 Servidor funcionando correctamente");
-});
+console.log("OPENAI_API", process.env.OPENAI_API_KEY)
 
-app.listen(PORT, () => {
-    console.log(`Example app listening at http://localhost:${PORT}`)
-})
+const returnNews = async (url) => {
+    try {
+        const scrapedContent = await scrapeNews(url);
+        console.log(scrapedContent)
+        if(scrapedContent.error){
+            return scrapedContent
+        }
+        const content = await getContent(scrapedContent.content);
+        if(typeof content === "string"){
+            const parsedContent = JSON.parse(content)
+            return parsedContent
+        }
+    } catch (error) {
+        console.error("Error a la hora de generar la noticia", error)
+    }
+    
+}
+
+module.exports = {scrapeNews, returnNews}
