@@ -37,6 +37,8 @@ const scrapeNews = async (url) => {
     
 };
 
+console.log("OPENAI_API", process.env.OPENAI_API_KEY)
+
 const returnNews = async (url) => {
     try {
         const scrapedContent = await scrapeNews(url);
