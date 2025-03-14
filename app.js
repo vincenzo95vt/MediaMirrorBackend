@@ -3,6 +3,7 @@ const { getContent } = require("./content");
 const { urlCheck } = require("./utils");
 
 const scrapeNews = async (url) => {
+    console.log(url)
     try {
         if (!url || typeof url !== "string" || !url.startsWith("https")) {
             return {
@@ -31,6 +32,7 @@ const scrapeNews = async (url) => {
     } catch (error) {
         return {
             error: true,
+            log: error.message,
             message: "Error al procesar la pagina"
         };
     }
