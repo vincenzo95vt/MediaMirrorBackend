@@ -21,7 +21,7 @@ const scrapeNews = async (url) => {
         }else{
             const browser = await puppeteer.launch({
                 args: ["--no-sandbox", "--disable-setuid-sandbox"],
-                headless: false
+                headless: "new"
             });
             const page = await browser.newPage();
             await page.goto(url, { waitUntil: "domcontentloaded" });
