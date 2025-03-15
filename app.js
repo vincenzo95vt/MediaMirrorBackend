@@ -4,7 +4,7 @@ const { getContent } = require("./content");
 const { urlCheck } = require("./utils");
 
 const scrapeNews = async (url) => {
-    console.log(url)
+    console.log(url);
     try {
         if (!url || typeof url !== "string" || !url.startsWith("https")) {
             return {
@@ -12,36 +12,38 @@ const scrapeNews = async (url) => {
                 message: "No es una URL válida"
             };
         }
-        const check = urlCheck(url)
-        if(check === false){
+
+        const check = urlCheck(url);
+        if (check === false) {
             return {
                 error: true,
                 message: "Ups, parece que tu periódico no es de confianza."
             };
-        }else{
-            const browser = await puppeteer.launch({
-                args: ["--no-sandbox", "--disable-setuid-sandbox"],
-                headless: "new"
-            });
-            const page = await browser.newPage();
-            await page.goto(url, { waitUntil: "domcontentloaded" });
-        
-            const content = await page.evaluate(() => document.body.innerText);
-            await browser.close();
-            return {
-                error: false,
-                content
-            }
         }
+
+        const browser = await puppeteer.launch({
+            headless: "new",
+            args: ["--no-sandbox", "--disable-setuid-sandbox"]
+        });
+
+        const page = await browser.newPage();
+        await page.goto(url, { waitUntil: "domcontentloaded" });
+
+        const content = await page.evaluate(() => document.body.innerText);
+        await browser.close();
+
+        return {
+            error: false,
+            content
+        };
     } catch (error) {
-        console.error("Esto no funciona:",error)
+        console.error("❌ Error en scrapeNews:", error);
         return {
             error: true,
             log: error.message,
-            message: "Error al procesar la pagina"
+            message: "Error al procesar la página"
         };
     }
-    
 };
 
 console.log("OPENAI_API", process.env.OPENAI_API_KEY)

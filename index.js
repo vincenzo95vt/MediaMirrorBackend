@@ -5,7 +5,7 @@ const { returnNews } = require("./app.js");
 app.use(express.json());
 app.use(cors());
 
-const PORT = 3000
+const PORT = process.env.PORT || 3000
 
 app.post("/scrape", async (req, res) => {
     const url = req.body.url;
