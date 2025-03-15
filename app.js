@@ -21,7 +21,7 @@ const scrapeNews = async (url) => {
         }else{
             const browser = await puppeteer.launch({
                 args: ["--no-sandbox", "--disable-setuid-sandbox"],
-                headless: "new"
+                headless: true
             });
             const page = await browser.newPage();
             await page.goto(url, { waitUntil: "domcontentloaded" });
@@ -34,6 +34,7 @@ const scrapeNews = async (url) => {
             }
         }
     } catch (error) {
+        console.error("Esto no funciona:",error)
         return {
             error: true,
             log: error.message,
