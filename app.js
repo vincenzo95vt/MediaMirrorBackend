@@ -19,7 +19,11 @@ const scrapeNews = async (url) => {
                 message: "Ups, parece que tu periódico no es de confianza."
             };
         }else{
-            const browser = await puppeteer.launch({ headless: true });
+            const browser = await puppeteer.launch({
+                args: ["--no-sandbox", "--disable-setuid-sandbox"],
+                headless: "new",
+                executablePath: puppeteer.executablePath() 
+            });
             const page = await browser.newPage();
             await page.goto(url, { waitUntil: "domcontentloaded" });
         
