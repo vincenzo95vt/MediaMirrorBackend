@@ -20,6 +20,7 @@ const scrapeNews = async (url) => {
             };
         }else{
             const browser = await puppeteer.launch({
+                executablePath: "/usr/bin/google-chrome-stable", // 👈 Aquí usamos el Chrome que se instaló
                 args: ["--no-sandbox", "--disable-setuid-sandbox"],
                 headless: "new"
             });
